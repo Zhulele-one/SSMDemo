@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lele.SSMDemo.dao.StudentMapper">
+    <select id="findAll" resultType="com.lele.SSMDemo.domain.Student">
+        select * from student
+    </select>
+
+    <select id="findById" resultType="com.lele.SSMDemo.domain.Student">
+        select * from student where id=#{id}
+    </select>
+
+    <insert id="insertStudent">
+        insert into student(nickname,name,sex,score,clazzId) values (#{nickname},#{name},#{sex},#{score},#{banji.id})
+    </insert>
+
+    <update id="updateStudent">
+        update student set name=#{name},sex=#{sex},score=#{score} where id=#{id}
+    </update>
+
+    <delete id="deleteStudent">
+        delete from student where id=#{id}
+    </delete>
+
+    <select id="searchByNameAndScore" resultType="com.lele.SSMDemo.domain.Student">
+        select * from student where name like #{name} or score=#{score}
+    </select>
+
+    <resultMap type="com.lele.SSMDemo.domain.Student" id="studentMap">
+        <result property="id" column="id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="score" column="score"/>
+
+        <association property="banji">
+            <result property="name" column="bname"/>
+        </association>
+    </resultMap>
+
+    <select id="getByName" resultMap="studentMap">
+
+ 		select
+ 			s.id,
+ 			s.nickname,
+ 			s.name,
+ 			s.sex,
+ 			s.score,
+ 			b.name as bname
+ 		from student s
+ 		left join banji b
+ 		on s.clazzId = b.id
+ 		where s.name=#{name}
+
+    </select>
+</mapper>
